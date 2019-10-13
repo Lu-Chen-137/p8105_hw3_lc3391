@@ -1,0 +1,25 @@
+---
+title: "p8105_hw3_lc3391"
+author: "Lu Chen"
+date: "10/13/2019"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+
+```
+
+# Problem 1
+
+##importing daraset
+```{r}
+library(p8105.datasets)
+data("instacart")
+
+str(instacart)
+```
+## short description of the dataset
+- In the dataset instacart, there are 1384617 observations of  15 variables. It composes with both numeric and categorical data. Some key variables are 'aisle', 'reordered', 'product name' and so on. One example is that the Asian Chopped Salad with Dressing with product id 18394 located on aisle 123, Packaged Vegetables and Fruits, from department 4, Produce, is reordered once by customer with user id 182389. 
+
