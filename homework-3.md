@@ -6,7 +6,7 @@ Lu Chen
 Problem 1
 =========
 
-importing daraset
+Importing daraset
 -----------------
 
 ``` r
@@ -51,7 +51,35 @@ str(instacart)
     ##   ..   department = col_character()
     ##   .. )
 
-short description of the dataset
---------------------------------
+### Short description of the dataset
 
 -   In the dataset instacart, there are 1384617 observations of 15 variables. It composes with both numeric and categorical data. Some key variables are 'aisle', 'reordered', 'product name' and so on. One example is that the Asian Chopped Salad with Dressing with product id 18394 located on aisle 123, Packaged Vegetables and Fruits, from department 4, Produce, is reordered once by customer with user id 182389.
+
+Summarize the dataset - 1
+-------------------------
+
+``` r
+instacart %>% 
+  group_by(aisle) %>% 
+  summarize(n_aisle=n()) %>% 
+  arrange(desc(n_aisle))
+```
+
+    ## # A tibble: 134 x 2
+    ##    aisle                         n_aisle
+    ##    <chr>                           <int>
+    ##  1 fresh vegetables               150609
+    ##  2 fresh fruits                   150473
+    ##  3 packaged vegetables fruits      78493
+    ##  4 yogurt                          55240
+    ##  5 packaged cheese                 41699
+    ##  6 water seltzer sparkling water   36617
+    ##  7 milk                            32644
+    ##  8 chips pretzels                  31269
+    ##  9 soy lactosefree                 26240
+    ## 10 bread                           23635
+    ## # … with 124 more rows
+
+``` r
+#little summary: there are 134 aisles, and most intems are ordered from the aisle Fresh Vegetables.
+```
