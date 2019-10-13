@@ -23,7 +23,7 @@ str(instacart)
 ### Short description of the dataset
 - In the dataset instacart, there are 1384617 observations of  15 variables. It composes with both numeric and categorical data. Some key variables are 'aisle', 'reordered', 'product name' and so on. One example is that the Asian Chopped Salad with Dressing with product id 18394 located on aisle 123, Packaged Vegetables and Fruits, from department 4, Produce, is reordered once by customer with user id 182389. 
 
-## Summarize the dataset - 1
+## Summarize the dataset
 ```{r}
 instacart %>% 
   group_by(aisle) %>% 
@@ -31,4 +31,20 @@ instacart %>%
   arrange(desc(n_aisle))
 
 #little summary: there are 134 aisles, and most intems are ordered from the aisle Fresh Vegetables.
+
+instacart %>% 
+  group_by(aisle) %>% 
+  summarize(n_aisle=n()) %>% 
+  filter(n_aisle > 10000) %>% 
+  arrange(aisle) %>% 
+  ggplot(aes(x = aisle, y = n_aisle)) +
+  geom_point() +
+  labs(
+    title = "Items ordered in aisle",
+    x = "Name of aisle",
+    y = "Number of items ordered from the aisle",
+    caption = "Data from the p8105 package"
+  )
 ```
+
+
