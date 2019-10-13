@@ -81,7 +81,7 @@ instacart %>%
     ## # … with 124 more rows
 
 ``` r
-#little summary: there are 134 aisles, and most intems are ordered from the aisle Fresh Vegetables.
+#little comment: there are 134 aisles, and most intems are ordered from the aisle Fresh Vegetables.
 
 instacart %>% 
   group_by(aisle) %>% 
@@ -95,7 +95,11 @@ instacart %>%
     x = "Name of aisle",
     y = "Number of items ordered from the aisle",
     caption = "Data from the p8105 package"
-  )
+  ) 
 ```
 
 ![](homework-3_files/figure-markdown_github/unnamed-chunk-2-1.png)
+
+``` r
+#Little comment: there are many aisles with more than 10000 items ordered, and the top 3 are: fresh veges, fresh fruits, and packaged vege and fruits.
+```
