@@ -6,7 +6,7 @@ Lu Chen
 Problem 1
 =========
 
-Importing daraset
+Importing dataset
 -----------------
 
 ``` r
@@ -127,4 +127,93 @@ instacart %>%
 
 ``` r
 #little comments: The three most popular items in baking ingredients aisle are Light Brown Sugar, Cane Sugar, and Organic Vanilla Extract; that in dog food care aisle are Standard Size Pet Waste Bags, Beef Stew Canned Dog Food, and Snack Sticks Chicken & Rice Recipe Dog Treats; that in packaged vegetables fruits aisle are Organic Baby Spainach, Organic Raspberries and Organic Blueberries.
+
+instacart %>% 
+  mutate(order_dow = recode(order_dow, "0" = "Sunday", "1" = "Monday", "2" = "Tuesday", "3" = "Wednesday", 
+                            "4" = "Thursday", "5" = "Friday", "6" = "Saturday")) %>% 
+  filter(product_name %in% c("Pink Lady Apples", "Coffee Ice Cream")) %>% 
+  group_by(product_name, order_dow) %>% 
+  summarize(mean_hour_of_day = mean(order_hour_of_day)) %>%
+  pivot_wider(names_from = order_dow, values_from = mean_hour_of_day) %>% 
+  knitr::kable()
+```
+
+| product\_name    |    Friday|    Monday|  Saturday|    Sunday|  Thursday|   Tuesday|  Wednesday|
+|:-----------------|---------:|---------:|---------:|---------:|---------:|---------:|----------:|
+| Coffee Ice Cream |  12.26316|  14.31579|  13.83333|  13.77419|  15.21739|  15.38095|   15.31818|
+| Pink Lady Apples |  12.78431|  11.36000|  11.93750|  13.44118|  11.55172|  11.70213|   14.25000|
+
+``` r
+#little comments: The mean order hour of the day for both products are concentrated on noon to afternoon (about 11:00 to 15:00).
+```
+
+Problem 2
+---------
+
+### Importing and cleaning the dataset
+
+``` r
+library(p8105.datasets)
+data("brfss_smart2010")
+
+brfss_smart2010 = 
+  brfss_smart2010 %>% 
+  janitor::clean_names() %>% 
+  filter(topic %in% c("Overall Health"), response %in% c("Excellent","Very good", "Good", "Fair", "Poor"))
+```
+
+### Summarize the dataset
+
+``` r
+brfss_smart2010 %>% 
+  filter(year %in% c("2002")) %>% 
+  group_by(locationabbr, locationdesc) %>% 
+  summarize(n_loc = n()) %>% 
+  group_by(locationabbr) %>% 
+  summarize(n_loc = n()) %>% 
+  filter(n_loc >= 7)
+```
+
+    ## # A tibble: 6 x 2
+    ##   locationabbr n_loc
+    ##   <chr>        <int>
+    ## 1 CT               7
+    ## 2 FL               7
+    ## 3 MA               8
+    ## 4 NC               7
+    ## 5 NJ               8
+    ## 6 PA              10
+
+``` r
+#little comments: 6 states were observed at 7 or more locations, and they are CT, FL, MA, NC, NJ, and PA.
+
+brfss_smart2010 %>% 
+  filter(year %in% c("2010")) %>% 
+  group_by(locationabbr, locationdesc) %>% 
+  summarize(n_loc = n()) %>% 
+  group_by(locationabbr) %>% 
+  summarize(n_loc = n()) %>% 
+  filter(n_loc >= 7)
+```
+
+    ## # A tibble: 14 x 2
+    ##    locationabbr n_loc
+    ##    <chr>        <int>
+    ##  1 CA              12
+    ##  2 CO               7
+    ##  3 FL              41
+    ##  4 MA               9
+    ##  5 MD              12
+    ##  6 NC              12
+    ##  7 NE              10
+    ##  8 NJ              19
+    ##  9 NY               9
+    ## 10 OH               8
+    ## 11 PA               7
+    ## 12 SC               7
+    ## 13 TX              16
+    ## 14 WA              10
+
+``` r
+#little comments: there are 14 states were observed at 7 or more locations, and they are CA, CO, FL, MA, MD, NC, NE, NJ, NY, OH, PA, SC, TX, and WA.
 ```

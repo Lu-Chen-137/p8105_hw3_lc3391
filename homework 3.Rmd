@@ -13,7 +13,7 @@ library(tidyverse)
 
 # Problem 1
 
-## Importing daraset
+## Importing dataset
 ```{r}
 library(p8105.datasets)
 data("instacart")
@@ -58,6 +58,53 @@ instacart %>%
   knitr::kable()
 
 #little comments: The three most popular items in baking ingredients aisle are Light Brown Sugar, Cane Sugar, and Organic Vanilla Extract; that in dog food care aisle are Standard Size Pet Waste Bags, Beef Stew Canned Dog Food, and Snack Sticks Chicken & Rice Recipe Dog Treats; that in packaged vegetables fruits aisle are Organic Baby Spainach, Organic Raspberries and Organic Blueberries.
+
+instacart %>% 
+  mutate(order_dow = recode(order_dow, "0" = "Sunday", "1" = "Monday", "2" = "Tuesday", "3" = "Wednesday", 
+                            "4" = "Thursday", "5" = "Friday", "6" = "Saturday")) %>% 
+  filter(product_name %in% c("Pink Lady Apples", "Coffee Ice Cream")) %>% 
+  group_by(product_name, order_dow) %>% 
+  summarize(mean_hour_of_day = mean(order_hour_of_day)) %>%
+  pivot_wider(names_from = order_dow, values_from = mean_hour_of_day) %>% 
+  knitr::kable()
+
+#little comments: The mean order hour of the day for both products are concentrated on noon to afternoon (about 11:00 to 15:00).
+
+```
+## Problem 2
+
+### Importing and cleaning the dataset
+```{r}
+library(p8105.datasets)
+data("brfss_smart2010")
+
+brfss_smart2010 = 
+  brfss_smart2010 %>% 
+  janitor::clean_names() %>% 
+  filter(topic %in% c("Overall Health"), response %in% c("Excellent","Very good", "Good", "Fair", "Poor"))
+
 ```
 
+### Summarize the dataset
+```{r}
+brfss_smart2010 %>% 
+  filter(year %in% c("2002")) %>% 
+  group_by(locationabbr, locationdesc) %>% 
+  summarize(n_loc = n()) %>% 
+  group_by(locationabbr) %>% 
+  summarize(n_loc = n()) %>% 
+  filter(n_loc >= 7)
+
+#little comments: 6 states were observed at 7 or more locations, and they are CT, FL, MA, NC, NJ, and PA.
+
+brfss_smart2010 %>% 
+  filter(year %in% c("2010")) %>% 
+  group_by(locationabbr, locationdesc) %>% 
+  summarize(n_loc = n()) %>% 
+  group_by(locationabbr) %>% 
+  summarize(n_loc = n()) %>% 
+  filter(n_loc >= 7)
+
+#little comments: there are 14 states were observed at 7 or more locations, and they are CA, CO, FL, MA, MD, NC, NE, NJ, NY, OH, PA, SC, TX, and WA.
+```
 
