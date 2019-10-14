@@ -136,6 +136,50 @@ brfss_smart2010 %>%
     caption = "data from package p8105"
   )
   
-  
+```
+
+## Problem 3
+
+### reading in dataset and do the cleaning
+```{r, warning=FALSE}
+accel_data = read_csv("./data/accel_data.csv") %>% 
+  janitor::clean_names() %>% 
+  mutate(wkdays_wkends = case_when(
+     day %in% c("Monday","Tuesday","Wednesday","Thursday","Friday") ~ "Weekday",
+     day %in% c("Saturday","Sunday") ~ "Weekend"
+  )) %>% 
+  select(week, day_id, day, wkdays_wkends, everything())
+
+str(accel_data)
+
+# Comments: there are 35 observations of 1444 variables. Other than week, day_id, day, and weekday vs. weekend, the dataset contains activity counts for each minute of a 24-hour day starting at midnight.
+
+accel_data %>% 
+  mutate(tot_act_each = rowSums(select(.,activity_1:activity_1440))) %>%
+  select(week, day_id, day, wkdays_wkends, tot_act_each) %>% 
+  mutate(day_int = case_when(
+     day == "Monday" ~ 1, day == "Tuesday" ~ 2, day == "Wednesday" ~ 3, day == "Thursday" ~ 4,
+     day == "Friday" ~ 5, day == "Saturday" ~ 6, day == "Sunday" ~ 7
+  )) %>% 
+  arrange(week, day_int) %>% 
+  select(week, day, tot_act_each) %>% 
+  pivot_wider(names_from = week, values_from = tot_act_each) %>% 
+  knitr::kable()
+
+# comments: no apparent trends shown here
+
+accel_data %>% 
+  mutate(tot_act_each = rowSums(select(.,activity_1:activity_1440))) %>% 
+  select(week, day_id, day, wkdays_wkends, tot_act_each) %>% 
+  ggplot(aes(x = week, y = tot_act_each, color = day)) + 
+  geom_point() +
+  geom_smooth(size = 0.5, se = FALSE) +
+  labs(
+    title = "the 24-hour activity time courses for each day",
+    x = "Week", 
+    y = "Activity counts per day"
+    ) 
+
+# comments: the patient has a relatively unstable activity pattern for each day. It varies a lot from starting to ending point. On Monday and Saturday, the variation is greater than other days. And on Tuesday and Wednesday, the activity is quite stable.
 ```
 
