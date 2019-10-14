@@ -240,9 +240,10 @@ brfss_smart2010 %>%
   filter(year %in% c("2006","2010"), 
          response %in% c("Excellent", "Very good", "Good", "Fair","Poor"), 
          locationabbr == "NY") %>% 
-  ggplot(aes(x = response, y = data_value)) +
-  geom_boxplot() +
+  ggplot(aes(x = locationdesc, y = data_value, fill = response)) +
+  geom_bar(stat = "identity", position = "fill") +
   facet_grid(. ~ year) +
+  coord_flip() +
   labs(
     title = "Distribution of data value for year 2006 and 2010 in NY state",
     x = "Response",
