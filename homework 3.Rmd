@@ -81,7 +81,8 @@ data("brfss_smart2010")
 brfss_smart2010 = 
   brfss_smart2010 %>% 
   janitor::clean_names() %>% 
-  filter(topic %in% c("Overall Health"), response %in% c("Excellent","Very good", "Good", "Fair", "Poor"))
+  filter(topic %in% c("Overall Health"), response %in% c("Excellent","Very good", "Good", "Fair", "Poor")) %>% 
+  mutate(response = fct_relevel(response, "Poor","Fair","Good","Very good","Excellent"))
 
 ```
 
@@ -106,5 +107,35 @@ brfss_smart2010 %>%
   filter(n_loc >= 7)
 
 #little comments: there are 14 states were observed at 7 or more locations, and they are CA, CO, FL, MA, MD, NC, NE, NJ, NY, OH, PA, SC, TX, and WA.
+
+brfss_smart2010 %>% 
+  filter(response %in% c("Excellent")) %>% 
+  group_by(year, locationabbr, locationdesc) %>% 
+  summarize(average_data_value = mean(data_value)) %>%
+  select(year, locationabbr, locationdesc, average_data_value) %>% 
+  ggplot(aes(x = year, y = average_data_value)) +
+  geom_line(aes(group = locationabbr)) +
+  labs(
+    title = "Spaghetti plot",
+    x = "Year",
+    y = "Average data value",
+    caption = "Data from p8105 package"
+  )
+  
+brfss_smart2010 %>% 
+  filter(year %in% c("2006","2010"), 
+         response %in% c("Excellent", "Very good", "Good", "Fair","Poor"), 
+         locationabbr == "NY") %>% 
+  ggplot(aes(x = response, y = data_value)) +
+  geom_boxplot() +
+  facet_grid(. ~ year) +
+  labs(
+    title = "Distribution of data value for year 2006 and 2010 in NY state",
+    x = "Response",
+    y = "data value",
+    caption = "data from package p8105"
+  )
+  
+  
 ```
 
