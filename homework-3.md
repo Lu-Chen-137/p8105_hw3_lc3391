@@ -81,7 +81,7 @@ instacart %>%
     ## # … with 124 more rows
 
 ``` r
-#little comment: there are 134 aisles, and most intems are ordered from the aisle Fresh Vegetables.
+#little comments: there are 134 aisles, and most intems are ordered from the aisle Fresh Vegetables.
 
 instacart %>% 
   group_by(aisle) %>% 
@@ -101,5 +101,30 @@ instacart %>%
 ![](homework-3_files/figure-markdown_github/unnamed-chunk-2-1.png)
 
 ``` r
-#Little comment: there are many aisles with more than 10000 items ordered, and the top 3 are: fresh veges, fresh fruits, and packaged vege and fruits.
+#Little comments: there are many aisles with more than 10000 items ordered, and the top 3 are: fresh veges, fresh fruits, and packaged vege and fruits.
+
+instacart %>% 
+  filter(aisle %in% c("baking ingredients", "dog food care", "packaged vegetables fruits")) %>% 
+  group_by(aisle, product_name) %>% 
+  summarize(sum_orders = sum(order_number)) %>% 
+  mutate(order_rank = min_rank(desc(sum_orders))) %>%
+  filter(order_rank %in% c(1,2,3)) %>%
+  arrange(aisle, order_rank) %>% 
+  knitr::kable()
+```
+
+| aisle                      | product\_name                                 |  sum\_orders|  order\_rank|
+|:---------------------------|:----------------------------------------------|------------:|------------:|
+| baking ingredients         | Light Brown Sugar                             |         8605|            1|
+| baking ingredients         | Cane Sugar                                    |         6244|            2|
+| baking ingredients         | Organic Vanilla Extract                       |         6003|            3|
+| dog food care              | Standard Size Pet Waste bags                  |          675|            1|
+| dog food care              | Beef Stew Canned Dog Food                     |          631|            2|
+| dog food care              | Snack Sticks Chicken & Rice Recipe Dog Treats |          589|            3|
+| packaged vegetables fruits | Organic Baby Spinach                          |       171301|            1|
+| packaged vegetables fruits | Organic Raspberries                           |       113932|            2|
+| packaged vegetables fruits | Organic Blueberries                           |        86765|            3|
+
+``` r
+#little comments: The three most popular items in baking ingredients aisle are Light Brown Sugar, Cane Sugar, and Organic Vanilla Extract; that in dog food care aisle are Standard Size Pet Waste Bags, Beef Stew Canned Dog Food, and Snack Sticks Chicken & Rice Recipe Dog Treats; that in packaged vegetables fruits aisle are Organic Baby Spainach, Organic Raspberries and Organic Blueberries.
 ```
